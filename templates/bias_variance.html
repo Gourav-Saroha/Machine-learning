@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="surface-card chart-card"><div class="section-header"><h3>Conceptual bias-variance comparison</h3><p>Aligned with the notebook explanation: Decision Tree has high variance, Bagging lowers variance, Random Forest lowers it further with slight extra bias.</p></div><div id="bias-variance-chart" class="plot-container"></div></div>
+    </div>
+    <div class="col-lg-5">
+        <div class="surface-card h-100">
+            <div class="section-header"><h3>Interpretation</h3><p>Short educational summary from the notebook narrative.</p></div>
+            <div class="concept-stack">
+                <div class="concept-pill"><strong>Decision Tree</strong><span>Low bias, high variance, can overfit training data.</span></div>
+                <div class="concept-pill"><strong>Bagging</strong><span>Bias stays similar while variance drops through averaging.</span></div>
+                <div class="concept-pill"><strong>Random Forest</strong><span>Feature randomness further decorrelates trees and improves generalization.</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="surface-card chart-card"><div class="section-header"><h3>Observed generalization gap</h3><p>Train and test accuracy from the actual tuned models help ground the concept visually.</p></div><div id="generalization-gap-chart" class="plot-container"></div></div>
+    </div>
+</div>
+{% endblock %}

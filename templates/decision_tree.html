@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-xl-4">
+        <div class="surface-card sticky-lg-top control-card">
+            <div class="section-header"><h3>Decision Tree controls</h3><p>Uses the notebook's DecisionTreeClassifier logic on the shared train/test split.</p></div>
+            <form id="decision-tree-form" class="row g-3">
+                <div class="col-12">
+                    <label class="form-label">max_depth</label>
+                    <input class="form-control" type="number" name="max_depth" value="4" min="1">
+                    <div class="form-text">Leave blank for None.</div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">min_samples_leaf</label>
+                    <input class="form-control" type="number" name="min_samples_leaf" value="1" min="1">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">random_state</label>
+                    <input class="form-control" type="number" name="random_state" value="42" min="0">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Run notes</label>
+                    <textarea class="form-control" name="notes" rows="2" placeholder="Optional note for this experiment"></textarea>
+                </div>
+                <div class="col-12 d-grid gap-2">
+                    <button class="btn btn-primary action-btn" type="submit">Train Model</button>
+                    <button class="btn btn-outline-dark" type="button" id="decision-tree-tune">Tune Hyperparameters</button>
+                </div>
+            </form>
+            <div id="decision-tree-metrics" class="mini-metrics mt-4"></div>
+            <div class="surface-subcard mt-4">
+                <div class="section-header"><h3>Tree explorer</h3><p>Inspect one held-out sample and the path it follows through the tree.</p></div>
+                <div class="row g-3">
+                    <div class="col-12"><label class="form-label">Test sample index</label><input class="form-control" id="decision-tree-sample-index" type="number" min="0" value="0"></div>
+                    <div class="col-6"><label class="form-label">Boundary feature X</label><select class="form-select" id="decision-boundary-x"></select></div>
+                    <div class="col-6"><label class="form-label">Boundary feature Y</label><select class="form-select" id="decision-boundary-y"></select></div>
+                    <div class="col-12 d-grid"><button class="btn btn-outline-dark" type="button" id="decision-tree-explore">Inspect Sample + Boundary</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-8">
+        <div class="row g-4">
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Performance snapshot</h3><p>Train, CV, test, precision, recall, and F1 from actual model execution.</p></div><div id="decision-tree-metric-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Confusion matrix</h3><p>Class-level prediction behavior on the held-out test set.</p></div><div id="decision-tree-confusion-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Feature importance</h3><p>Impurity-based importance from the fitted decision tree.</p></div><div id="decision-tree-importance-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Prediction distribution</h3><p>Predicted class counts across the test split.</p></div><div id="decision-tree-prediction-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Decision path probabilities</h3><p>Class probabilities for the selected held-out sample.</p></div><div id="decision-tree-probability-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Decision boundary explorer</h3><p>2D boundary view using the selected feature pair while other features stay at their training means.</p></div><div id="decision-tree-boundary-chart" class="plot-container"></div></div></div>
+            <div class="col-12"><div class="surface-card"><div class="section-header"><h3>Classification metrics</h3><p>Weighted metrics plus class-wise precision, recall, and F1.</p></div><div id="decision-tree-report"></div></div></div>
+            <div class="col-12"><div class="surface-card"><div class="section-header"><h3>Interactive path details</h3><p>Node-by-node rule path for the selected test sample.</p></div><div id="decision-tree-path"></div></div></div>
+            <div class="col-12"><div class="surface-card"><div class="section-header"><h3>Prediction playground</h3><p>Enter a flower measurement and compare live class probabilities across notebook-based models.</p></div><div id="prediction-playground"></div></div></div>
+            <div class="col-12"><div class="surface-card"><div class="section-header"><h3>Tree rules snapshot</h3><p>A readable rule export in place of a static image-heavy tree diagram.</p></div><pre id="decision-tree-rules" class="rules-box"></pre></div></div>
+            <div class="col-12"><div class="surface-card"><div class="section-header"><h3>Experiment history</h3><p>Lightweight local history of your parameter runs for quick comparison.</p></div><div id="decision-tree-history"></div></div></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

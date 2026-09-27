@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="surface-card control-card sticky-lg-top">
+            <div class="section-header"><h3>Importance controls</h3><p>Compare MDI / Gini importance with permutation importance on held-out data.</p></div>
+            <form id="importance-form" class="row g-3">
+                <div class="col-12"><label class="form-label">Permutation repeats</label><input class="form-control" type="number" name="n_repeats" value="10" min="1" max="50"></div>
+                <div class="col-12"><label class="form-label">random_state</label><input class="form-control" type="number" name="random_state" value="42" min="0"></div>
+                <div class="col-12 d-grid"><button class="btn btn-primary action-btn" type="submit">Recompute Importance</button></div>
+            </form>
+            <div class="mt-4 toggle-group" role="group">
+                <button class="btn btn-dark active" id="importance-toggle-gini" type="button">Gini Importance</button>
+                <button class="btn btn-outline-dark" id="importance-toggle-permutation" type="button">Permutation Importance</button>
+            </div>
+            <div class="comparison-note mt-4"><strong>Difference:</strong> MDI is model-internal impurity reduction. Permutation importance measures the drop in performance after shuffling a feature.</div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="surface-card chart-card"><div class="section-header"><h3>Feature importance chart</h3><p>Switch between impurity-based importance and permutation-based importance.</p></div><div id="importance-chart" class="plot-container"></div></div>
+        <div class="surface-card table-card mt-4"><div class="section-header"><h3>Importance table</h3><p>Permutation importance includes standard deviation for repeat stability.</p></div><div id="importance-table"></div></div>
+    </div>
+</div>
+{% endblock %}

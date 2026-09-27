@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-xl-4">
+        <div class="surface-card control-card sticky-lg-top">
+            <div class="section-header"><h3>Dataset Controls</h3><p>Inspect the uploaded dataset and correct the target column when auto-detection needs help.</p></div>
+            <div class="mini-metrics mb-4">
+                <div class="mini-metric-card"><span class="label">Dataset</span><span class="value small-value">{{ initial_data.summary.dataset }}</span></div>
+                <div class="mini-metric-card"><span class="label">Rows</span><span class="value small-value">{{ initial_data.summary.rows }}</span></div>
+                <div class="mini-metric-card"><span class="label">Columns</span><span class="value small-value">{{ initial_data.summary.columns }}</span></div>
+                <div class="mini-metric-card"><span class="label">Target</span><span class="value small-value">{{ initial_data.summary.target_column }}</span></div>
+            </div>
+            {% if initial_data.is_target_editable %}
+            <form id="target-column-form" class="row g-3">
+                <div class="col-12">
+                    <label class="form-label">Target column</label>
+                    <select id="target-column-select" class="form-select" name="target_column">
+                        {% for column in initial_data.target_columns %}
+                        <option value="{{ column }}" {% if column == initial_data.summary.target_column %}selected{% endif %}>{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 d-grid">
+                    <button class="btn btn-primary action-btn" type="submit">Update Target Column</button>
+                </div>
+            </form>
+            {% else %}
+            <div class="comparison-note">Built-in datasets use fixed target columns.</div>
+            {% endif %}
+            <div class="surface-subcard mt-4">
+                <div class="section-header"><h3>Column Drilldown</h3><p>Switch columns to inspect distribution and summary statistics.</p></div>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label">Column</label>
+                        <select id="profile-column-select" class="form-select">
+                            {% for column in initial_data.available_columns %}
+                            <option value="{{ column }}" {% if column == initial_data.selected_column %}selected{% endif %}>{{ column }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-12 d-grid">
+                        <button class="btn btn-outline-dark" type="button" id="profile-column-refresh">Inspect Column</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-8">
+        {% if initial_data.warnings %}
+        <div class="comparison-note mb-4">
+            {% for warning in initial_data.warnings %}
+            <div>{{ warning }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="row g-4">
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Target Distribution</h3><p>Class or target distribution for the current dataset.</p></div><div id="profile-target-distribution-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Missing Values</h3><p>Missing-value count by column.</p></div><div id="profile-missing-values-chart" class="plot-container"></div></div></div>
+            <div class="col-12"><div class="surface-card chart-card"><div class="section-header"><h3>Correlation Heatmap</h3><p>Numeric relationships inside the active dataset.</p></div><div id="profile-correlation-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-7"><div class="surface-card chart-card"><div class="section-header"><h3>Selected Column Distribution</h3><p>Drill into one column at a time to inspect its value pattern.</p></div><div id="profile-column-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-5"><div class="surface-card"><div class="section-header"><h3>Selected Column Summary</h3><p>Basic statistics and cardinality for the active column.</p></div><div id="profile-column-summary"></div></div></div>
+            <div class="col-12"><div class="surface-card"><div class="section-header"><h3>Column Type Summary</h3><p>Dtypes and missing counts across the dataset.</p></div><div id="profile-dtype-summary"></div></div></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

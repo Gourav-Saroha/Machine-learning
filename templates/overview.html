@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-12">
+        <div class="hero-surface">
+            <div>
+                <p class="eyebrow mb-2">Overview</p>
+                <h2 class="section-title">Why ensembles become stronger predictors</h2>
+                <p class="muted-copy mb-0">This dashboard wraps the notebook's actual Decision Tree, Bagging, Random Forest, OOB, and feature-importance workflow in a presentation-ready interface.</p>
+            </div>
+            <div class="flow-card">
+                <div class="flow-step">Individual Models</div>
+                <div class="flow-arrow"><i class="bi bi-arrow-down"></i></div>
+                <div class="flow-step">Different Models / Samples</div>
+                <div class="flow-arrow"><i class="bi bi-arrow-down"></i></div>
+                <div class="flow-step">Aggregation</div>
+                <div class="flow-arrow"><i class="bi bi-arrow-down"></i></div>
+                <div class="flow-step accent">Stronger Predictor</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="row g-3">
+            <div class="col-md-6 col-xl-4"><div class="metric-tile"><span class="metric-label">Dataset</span><span class="metric-value">{{ initial_data.summary.dataset }}</span></div></div>
+            <div class="col-md-6 col-xl-4"><div class="metric-tile"><span class="metric-label">Number of samples</span><span class="metric-value">{{ initial_data.summary.samples }}</span></div></div>
+            <div class="col-md-6 col-xl-4"><div class="metric-tile"><span class="metric-label">Number of features</span><span class="metric-value">{{ initial_data.summary.features }}</span></div></div>
+            <div class="col-md-6 col-xl-4"><div class="metric-tile"><span class="metric-label">Number of classes</span><span class="metric-value">{{ initial_data.summary.classes }}</span></div></div>
+            <div class="col-md-6 col-xl-4"><div class="metric-tile"><span class="metric-label">Best model accuracy</span><span class="metric-value">{{ initial_data.summary.best_model_accuracy }}</span></div></div>
+            <div class="col-md-6 col-xl-4"><div class="metric-tile"><span class="metric-label">Number of estimators</span><span class="metric-value">{{ initial_data.summary.number_of_estimators }}</span></div></div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="surface-card chart-card">
+            <div class="section-header"><h3>Notebook-based model comparison</h3><p>Metrics come from the shared train/test split and the notebook tuning flow.</p></div>
+            <div id="overview-comparison-chart" class="plot-container"></div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="surface-card h-100">
+            <div class="section-header"><h3>Core ideas</h3><p>Short explanations kept close to the original notebook concepts.</p></div>
+            <div class="concept-stack">
+                <div class="concept-pill"><strong>Accuracy</strong><span>Each learner should perform better than random guessing.</span></div>
+                <div class="concept-pill"><strong>Diversity</strong><span>Different learners should make different mistakes.</span></div>
+                <div class="concept-pill"><strong>Bias</strong><span>Too-simple models underfit the signal.</span></div>
+                <div class="concept-pill"><strong>Variance</strong><span>Unstable models change too much with data perturbations.</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="surface-card">
+            <div class="section-header"><h3>Dataset Profile</h3><p>Auto-detected target information and quick quality checks for the active dataset.</p></div>
+            <div class="row g-3 mb-3">
+                <div class="col-md-3"><div class="mini-metric-card"><span class="label">Target column</span><span class="value small-value">{{ initial_data.profile.target_column }}</span></div></div>
+                <div class="col-md-3"><div class="mini-metric-card"><span class="label">Task type</span><span class="value small-value text-capitalize">{{ initial_data.profile.task_type }}</span></div></div>
+                <div class="col-md-3"><div class="mini-metric-card"><span class="label">Missing values</span><span class="value small-value">{{ initial_data.profile.missing_values }}</span></div></div>
+                <div class="col-md-3"><div class="mini-metric-card"><span class="label">Duplicate rows</span><span class="value small-value">{{ initial_data.profile.duplicate_rows }}</span></div></div>
+            </div>
+            {% if initial_data.profile.warnings %}
+            <div class="comparison-note mb-3">
+                {% for warning in initial_data.profile.warnings %}
+                <div>{{ warning }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="section-header"><h3>Class Balance</h3><p>Useful for understanding whether the uploaded target is imbalanced.</p></div>
+                    {% if initial_data.profile.class_balance %}
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead><tr><th>Class</th><th>Count</th><th>Percent</th></tr></thead>
+                            <tbody>
+                                {% for row in initial_data.profile.class_balance %}
+                                <tr><td>{{ row.label }}</td><td>{{ row.count }}</td><td>{{ row.pct }}%</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted mb-0">Class balance is shown for classification datasets.</p>
+                    {% endif %}
+                </div>
+                <div class="col-lg-6">
+                    <div class="section-header"><h3>Column Summary</h3><p>Detected dtypes and missing counts for the active dataset.</p></div>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead><tr><th>Column</th><th>Type</th><th>Missing</th></tr></thead>
+                            <tbody>
+                                {% for row in initial_data.profile.dtype_summary %}
+                                <tr><td>{{ row.column }}</td><td>{{ row.dtype }}</td><td>{{ row.missing }}</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="surface-card chart-card profile-chart-card">
+                        <div class="section-header"><h3>Target Distribution</h3><p>Quick view of class balance or target spread for the active dataset.</p></div>
+                        <div id="overview-target-distribution-chart" class="plot-container"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="surface-card chart-card profile-chart-card">
+                        <div class="section-header"><h3>Missing Values</h3><p>See which columns need attention before deeper experimentation.</p></div>
+                        <div id="overview-missing-values-chart" class="plot-container"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="surface-card chart-card profile-chart-card">
+                        <div class="section-header"><h3>Correlation Heatmap</h3><p>Numeric relationships within the current dataset.</p></div>
+                        <div id="overview-correlation-chart" class="plot-container"></div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="surface-card">
+                        <div class="section-header"><h3>Saved Runs</h3><p>Persistent experiment history shared across sessions for the current dataset.</p></div>
+                        <div id="overview-run-history"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

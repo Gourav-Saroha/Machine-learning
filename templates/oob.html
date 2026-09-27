@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="surface-card control-card sticky-lg-top">
+            <div class="section-header"><h3>OOB controls</h3><p>Trace OOB behavior using actual random forest fits with different tree counts.</p></div>
+            <form id="oob-form" class="row g-3">
+                <div class="col-12"><label class="form-label">random_state</label><input class="form-control" type="number" name="random_state" value="42" min="0"></div>
+                <div class="col-12"><label class="form-label">Maximum number of trees</label><input class="form-control" type="number" name="max_estimators" value="200" min="10" max="500"></div>
+                <div class="col-12 d-grid"><button class="btn btn-primary action-btn" type="submit">Update OOB Analysis</button></div>
+            </form>
+            <div class="workflow-card mt-4">
+                <div>Bootstrap sample</div>
+                <div><i class="bi bi-arrow-down"></i></div>
+                <div>Included observations + Excluded observations</div>
+                <div><i class="bi bi-arrow-down"></i></div>
+                <div>OOB prediction</div>
+                <div><i class="bi bi-arrow-down"></i></div>
+                <div class="fw-semibold">OOB Score</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div id="oob-metrics" class="row g-3 mb-1"></div>
+        <div class="surface-card chart-card"><div class="section-header"><h3>OOB score vs number of trees</h3><p>Calculated from actual model fits rather than demo values.</p></div><div id="oob-chart" class="plot-container"></div></div>
+    </div>
+</div>
+{% endblock %}

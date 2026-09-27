@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-12">
+        <div class="surface-card">
+            <div class="section-header">
+                <h3>Endpoint Catalog</h3>
+                <p>These APIs power the live Plotly updates, training actions, and sample explorers across the dashboard.</p>
+            </div>
+            <div class="comparison-note">
+                Every endpoint is dataset-aware. Add `?dataset=iris` or `?dataset=heart` to GET APIs, and include `dataset_key` in POST payloads.
+            </div>
+        </div>
+    </div>
+    {% for group in initial_data.api_groups %}
+    <div class="col-12">
+        <div class="surface-card table-card">
+            <div class="section-header">
+                <h3>{{ group.title }}</h3>
+                <p>Reusable Flask routes exposed by the application.</p>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Path</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in group['items'] %}
+                        <tr>
+                            <td><span class="inline-badge">{{ item.method }}</span></td>
+                            <td><code>{{ item.path }}{{ item.query if item.query is defined else '' }}</code></td>
+                            <td>{{ item.description }}</td>
+                            <td>
+                                <div class="api-action-group">
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-outline-dark api-copy-btn"
+                                        data-copy-text="{{ item.method }} {{ item.path }}{{ item.query if item.query is defined else '' }}{% if item.sample_body is defined %}\n{{ item.sample_body | tojson(indent=2) }}{% endif %}"
+                                    >
+                                        Copy
+                                    </button>
+                                    {% if item.try_live is defined and item.try_live %}
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-primary api-try-btn"
+                                        data-endpoint="{{ item.path }}{{ item.query }}"
+                                    >
+                                        Try API
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% if item.sample_body is defined %}
+                        <tr class="api-sample-row">
+                            <td colspan="4">
+                                <div class="api-sample-wrap">
+                                    <div class="small text-muted mb-2">Sample JSON request body</div>
+                                    <pre class="rules-box api-sample-code">{{ item.sample_body | tojson(indent=2) }}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="col-12">
+        <div class="surface-card">
+            <div class="section-header">
+                <h3>Live GET Response</h3>
+                <p>Use the Try API buttons to fetch live JSON from the running Flask app.</p>
+            </div>
+            <pre id="api-live-response" class="rules-box">Click a "Try API" button to inspect a live response here.</pre>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="surface-card">
+            <div class="section-header">
+                <h3>Example Usage</h3>
+                <p>Sample dataset-aware requests that mirror the interactive UI.</p>
+            </div>
+<pre class="rules-box">GET /api/model-comparison?dataset={{ current_dataset_key }}&random_state=42
+GET /api/feature-importance?dataset={{ current_dataset_key }}&random_state=42&n_repeats=10
+POST /api/decision-tree/train
+{
+  "dataset_key": "{{ current_dataset_key }}",
+  "max_depth": 4,
+  "min_samples_leaf": 1,
+  "random_state": 42
+}</pre>
+        </div>
+    </div>
+</div>
+{% endblock %}

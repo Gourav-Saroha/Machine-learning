@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-xl-4">
+        <div class="surface-card sticky-lg-top control-card">
+            <div class="section-header"><h3>Bootstrap controls</h3><p>Generate repeated samples with replacement from the Iris dataset.</p></div>
+            <form id="bootstrap-form" class="row g-3">
+                <div class="col-12">
+                    <label class="form-label">Sample size</label>
+                    <input class="form-control" type="number" name="sample_size" value="150" min="1" max="150">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Number of bootstrap samples</label>
+                    <input class="form-control" type="number" name="n_samples" value="4" min="1" max="12">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Random seed</label>
+                    <input class="form-control" type="number" name="random_seed" value="42" min="0">
+                </div>
+                <div class="col-12 d-grid">
+                    <button class="btn btn-primary action-btn" type="submit">Generate Bootstrap Samples</button>
+                </div>
+            </form>
+            <div id="bootstrap-summary" class="mini-metrics mt-4"></div>
+            <div class="surface-subcard mt-4">
+                <div class="section-header"><h3>Animated playback</h3><p>Step through one bootstrap sample at a time.</p></div>
+                <div class="d-grid gap-3">
+                    <input class="form-range" type="range" id="bootstrap-step" min="1" max="1" value="1">
+                    <div class="d-flex gap-2 align-items-center justify-content-between">
+                        <button class="btn btn-outline-dark" type="button" id="bootstrap-play">Play</button>
+                        <span id="bootstrap-step-label" class="small text-muted">Sample 1</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-8">
+        <div class="row g-4">
+            <div class="col-12"><div class="surface-card chart-card"><div class="section-header"><h3>Observation frequency</h3><p>Repeated rows appear as higher frequencies across generated samples.</p></div><div id="bootstrap-frequency-chart" class="plot-container"></div></div></div>
+            <div class="col-12"><div class="surface-card chart-card"><div class="section-header"><h3>Current sample focus</h3><p>Live graph for the currently selected bootstrap sample, with repeated rows emphasized.</p></div><div id="bootstrap-focus-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-7"><div class="surface-card chart-card"><div class="section-header"><h3>Row repetition heatmap</h3><p>Each row shows how often every observation appears in each bootstrap sample.</p></div><div id="bootstrap-heatmap-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-5"><div class="surface-card chart-card"><div class="section-header"><h3>Included vs OOB</h3><p>The classic 63.2% / 36.8% intuition appears as unique vs excluded rows.</p></div><div id="bootstrap-composition-chart" class="plot-container"></div></div></div>
+            <div class="col-12"><div class="surface-card"><div class="section-header"><h3>Generated sample summaries</h3><p>Repeated observation indices and OOB rows are surfaced per sample.</p></div><div id="bootstrap-samples"></div></div></div>
+            <div class="col-12"><div class="surface-card table-card"><div class="section-header"><h3>Original dataset rows</h3><p>The full Iris dataset is shown as row-level observations for visual traceability.</p></div><div id="bootstrap-original-table" class="table-responsive"></div></div></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

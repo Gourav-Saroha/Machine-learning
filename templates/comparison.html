@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="surface-card control-card">
+            <div class="section-header"><h3>Comparison setup</h3><p>The shared train/test split stays fixed so the three models are compared fairly.</p></div>
+            <form id="comparison-form" class="row g-3">
+                <div class="col-12">
+                    <label class="form-label">random_state for model training</label>
+                    <input class="form-control" type="number" name="random_state" value="42" min="0">
+                </div>
+                <div class="col-12 d-grid">
+                    <button class="btn btn-primary action-btn" type="submit">Refresh Comparison</button>
+                </div>
+            </form>
+            <div class="comparison-note mt-4">No best-model recommendation is imposed here. The application surfaces measured results and leaves interpretation to the user.</div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="surface-card chart-card"><div class="section-header"><h3>Grouped metric comparison</h3><p>Accuracy, precision, recall, and F1 for Decision Tree, Bagging, and Random Forest.</p></div><div id="comparison-chart" class="plot-container"></div></div>
+    </div>
+    <div class="col-12">
+        <div class="surface-card table-card"><div class="section-header"><h3>Comparison table</h3><p>All models evaluated on the same split with train and CV context included.</p></div><div id="comparison-table"></div></div>
+    </div>
+    <div class="col-12">
+        <div class="surface-card"><div class="section-header"><h3>Experiment history</h3><p>Recent Decision Tree and Random Forest runs recorded locally for quick side-by-side review.</p></div><div id="comparison-history"></div></div>
+    </div>
+</div>
+{% endblock %}

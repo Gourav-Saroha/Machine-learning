@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-xl-4">
+        <div class="surface-card sticky-lg-top control-card">
+            <div class="section-header"><h3>Bagging controls</h3><p>Bootstrap aggregation with DecisionTreeClassifier as the base estimator.</p></div>
+            <form id="bagging-form" class="row g-3">
+                <div class="col-md-6 col-xl-12">
+                    <label class="form-label">Number of estimators</label>
+                    <input class="form-control" type="number" name="n_estimators" value="50" min="1" max="500">
+                </div>
+                <div class="col-md-6 col-xl-12">
+                    <label class="form-label">max_samples</label>
+                    <input class="form-control" type="number" name="max_samples" value="1.0" min="0.1" max="1.0" step="0.1">
+                </div>
+                <div class="col-md-6 col-xl-12">
+                    <label class="form-label">max_features</label>
+                    <input class="form-control" type="number" name="max_features" value="1.0" min="0.1" max="1.0" step="0.1">
+                </div>
+                <div class="col-md-6 col-xl-12">
+                    <label class="form-label">random_state</label>
+                    <input class="form-control" type="number" name="random_state" value="42" min="0">
+                </div>
+                <div class="col-md-6 col-xl-12">
+                    <label class="form-label">Base tree max_depth</label>
+                    <input class="form-control" type="number" name="max_depth" value="4" min="1">
+                    <div class="form-text">Leave blank for None.</div>
+                </div>
+                <div class="col-md-6 col-xl-12">
+                    <label class="form-label">Base tree min_samples_leaf</label>
+                    <input class="form-control" type="number" name="min_samples_leaf" value="1" min="1">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Run notes</label>
+                    <textarea class="form-control" name="notes" rows="2" placeholder="Optional note for this experiment"></textarea>
+                </div>
+                <div class="col-12 d-grid gap-2">
+                    <button class="btn btn-primary action-btn" type="submit">Train Bagging Model</button>
+                    <button class="btn btn-outline-dark" type="button" id="bagging-tune">Tune Hyperparameters</button>
+                </div>
+            </form>
+            <div class="workflow-card mt-4">
+                <div>Dataset</div>
+                <div><i class="bi bi-arrow-down"></i></div>
+                <div>Bootstrap Sample 1 -> Tree 1</div>
+                <div>Bootstrap Sample 2 -> Tree 2</div>
+                <div>Bootstrap Sample 3 -> Tree 3</div>
+                <div><i class="bi bi-arrow-down"></i></div>
+                <div>Majority Voting</div>
+                <div><i class="bi bi-arrow-down"></i></div>
+                <div class="fw-semibold">Final Prediction</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-8">
+        <div id="bagging-metrics" class="row g-3 mb-1"></div>
+        <div class="row g-4">
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Accuracy vs estimators</h3><p>Test accuracy traced over actual bagging models with different ensemble sizes.</p></div><div id="bagging-accuracy-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Confusion matrix</h3><p>Held-out class performance after majority voting.</p></div><div id="bagging-confusion-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Performance comparison</h3><p>Train, CV, test, precision, recall, and F1 for the current run.</p></div><div id="bagging-metric-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Prediction distribution</h3><p>How the ensemble distributes predicted classes on the test set.</p></div><div id="bagging-prediction-chart" class="plot-container"></div></div></div>
+            <div class="col-12"><div class="surface-card"><div class="section-header"><h3>Classification metrics</h3><p>Class-wise metrics plus OOB information for the current ensemble.</p></div><div id="bagging-report"></div></div></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

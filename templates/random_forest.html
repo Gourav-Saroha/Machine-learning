@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-xl-4">
+        <div class="surface-card sticky-lg-top control-card">
+            <div class="section-header"><h3>Random Forest controls</h3><p>Bootstrap sampling plus random feature selection, kept close to the notebook implementation.</p></div>
+            <form id="random-forest-form" class="row g-3">
+                <div class="col-md-6 col-xl-12"><label class="form-label">n_estimators</label><input class="form-control" type="number" name="n_estimators" value="100" min="1" max="500"></div>
+                <div class="col-md-6 col-xl-12"><label class="form-label">max_depth</label><input class="form-control" type="number" name="max_depth" value="5" min="1"><div class="form-text">Leave blank for None.</div></div>
+                <div class="col-md-6 col-xl-12"><label class="form-label">min_samples_split</label><input class="form-control" type="number" name="min_samples_split" value="2" min="2"></div>
+                <div class="col-md-6 col-xl-12"><label class="form-label">min_samples_leaf</label><input class="form-control" type="number" name="min_samples_leaf" value="1" min="1"></div>
+                <div class="col-md-6 col-xl-12"><label class="form-label">max_features</label><select class="form-select" name="max_features"><option value="sqrt" selected>sqrt</option><option value="log2">log2</option></select></div>
+                <div class="col-md-6 col-xl-12"><label class="form-label">random_state</label><input class="form-control" type="number" name="random_state" value="42" min="0"></div>
+                <div class="col-12"><label class="form-label">Run notes</label><textarea class="form-control" name="notes" rows="2" placeholder="Optional note for this experiment"></textarea></div>
+                <div class="col-12 form-check form-switch px-4"><input class="form-check-input" type="checkbox" id="rf-oob-enabled" name="oob_enabled" checked><label class="form-check-label" for="rf-oob-enabled">Enable OOB score</label></div>
+                <div class="col-12 d-grid gap-2"><button class="btn btn-primary action-btn" type="submit">Train Random Forest</button><button class="btn btn-outline-dark" type="button" id="random-forest-tune">Tune Hyperparameters</button></div>
+            </form>
+            <div class="workflow-card mt-4">
+                <div>Bootstrap Sampling</div>
+                <div class="plus-mark">+</div>
+                <div>Random Feature Selection</div>
+                <div><i class="bi bi-arrow-down"></i></div>
+                <div>Multiple Decision Trees</div>
+                <div><i class="bi bi-arrow-down"></i></div>
+                <div>Majority Voting</div>
+                <div><i class="bi bi-arrow-down"></i></div>
+                <div class="fw-semibold">Final Prediction</div>
+            </div>
+            <div class="surface-subcard mt-4">
+                <div class="section-header"><h3>Voting explorer</h3><p>Inspect how individual trees vote on a single held-out sample.</p></div>
+                <div class="row g-3">
+                    <div class="col-12"><label class="form-label">Test sample index</label><input class="form-control" id="rf-sample-index" type="number" min="0" value="0"></div>
+                    <div class="col-12 d-grid"><button class="btn btn-outline-dark" type="button" id="random-forest-voting">Inspect Voting</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-8">
+        <div id="random-forest-metrics" class="row g-3 mb-1"></div>
+        <div class="row g-4">
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Accuracy vs trees</h3><p>Test accuracy traced over actual random forest fits with growing tree counts.</p></div><div id="random-forest-accuracy-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Confusion matrix</h3><p>Class-level performance for the current forest.</p></div><div id="random-forest-confusion-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Feature importance</h3><p>MDI importance computed from the fitted forest.</p></div><div id="random-forest-importance-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Prediction distribution</h3><p>Distribution of test predictions by class.</p></div><div id="random-forest-prediction-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>Tree vote counts</h3><p>Class counts from individual estimator votes for the selected sample.</p></div><div id="random-forest-vote-count-chart" class="plot-container"></div></div></div>
+            <div class="col-lg-6"><div class="surface-card chart-card"><div class="section-header"><h3>First-tree vote trace</h3><p>See how the first trees in the forest vote before majority aggregation.</p></div><div id="random-forest-tree-vote-chart" class="plot-container"></div></div></div>
+            <div class="col-12"><div class="surface-card chart-card"><div class="section-header"><h3>Performance snapshot</h3><p>Train, CV, test, precision, recall, F1, and OOB metrics for the active run.</p></div><div id="random-forest-metric-chart" class="plot-container"></div></div></div>
+            <div class="col-12"><div class="surface-card chart-card"><div class="section-header"><h3>Consensus probabilities</h3><p>Forest-level class probabilities for the selected sample.</p></div><div id="random-forest-probability-chart" class="plot-container"></div></div></div>
+            <div class="col-12"><div class="surface-card"><div class="section-header"><h3>Classification metrics</h3><p>Detailed class-wise metrics from the shared evaluation split.</p></div><div id="random-forest-report"></div></div></div>
+            <div class="col-12"><div class="surface-card"><div class="section-header"><h3>Voting details</h3><p>Selected sample features, true label, and final voted prediction.</p></div><div id="random-forest-voting-details"></div></div></div>
+            <div class="col-12"><div class="surface-card"><div class="section-header"><h3>Experiment history</h3><p>Stored locally in the browser to compare your Random Forest what-if runs.</p></div><div id="random-forest-history"></div></div></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

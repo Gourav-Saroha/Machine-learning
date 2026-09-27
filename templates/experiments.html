@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-xl-4">
+        <div class="surface-card control-card sticky-lg-top">
+            <div class="section-header"><h3>Experiment Controls</h3><p>Review persistent run history, compare two runs, and update notes without losing them on refresh.</p></div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label">Run A</label>
+                    <select id="experiment-select-a" class="form-select"></select>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Run B</label>
+                    <select id="experiment-select-b" class="form-select"></select>
+                </div>
+                <div class="col-12 d-grid">
+                    <button class="btn btn-outline-dark" type="button" id="experiment-compare-btn">Compare Runs</button>
+                </div>
+            </div>
+            <div class="comparison-note mt-4">All runs shown here come from the backend history store, not browser-only local state.</div>
+        </div>
+    </div>
+    <div class="col-xl-8">
+        <div class="surface-card table-card">
+            <div class="section-header"><h3>Persistent Run History</h3><p>Saved runs across sessions for the currently selected dataset.</p></div><div id="experiments-history-table"></div>
+        </div>
+        <div class="surface-card mt-4">
+            <div class="section-header"><h3>Side-by-Side Diff</h3><p>Hyperparameters, metrics, and notes compared across two selected runs.</p></div><div id="experiments-diff"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+[
+  {
+    "timestamp": "2026-09-27T17:07:12Z",
+    "dataset_key": "heart-v2-2",
+    "dataset_label": "heart_v2",
+    "model_type": "Decision Tree",
+    "hyperparameters": {
+      "max_depth": 4
+    },
+    "metrics": {
+      "test_accuracy": 0.75
+    },
+    "notes": "smoke test"
+  },
+  {
+    "timestamp": "2026-09-27T17:05:01Z",
+    "dataset_key": null,
+    "dataset_label": null,
+    "model_type": null,
+    "hyperparameters": {},
+    "metrics": {},
+    "notes": ""
+  }
+]
